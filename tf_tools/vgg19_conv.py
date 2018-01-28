@@ -121,8 +121,37 @@ class V19_CONV(MODEL):
             )
         self.block3_conv2 = tf.nn.relu(self.block3_conv2)
 
-        self.block3_pool = tf.contrib.layers.max_pool2d(
+        w4 = v19.get_layer('block3_conv3').get_weights()
+        self.block3_conv3 = CONV2D(
             self.block3_conv2,
+            [3,3,256,256],
+            name = 'block3_conv3',
+            ini_val = w4[0],
+            padding = 'SAME'
+            )
+        self.block3_conv3 = PLUSB(
+            self.block3_conv3,
+            name = 'block3_conv3',
+            ini_val = w4[1]
+            )
+        self.block3_conv3 = tf.nn.relu(self.block3_conv2)
+
+        w5 = v19.get_layer('block3_conv4').get_weights()
+        self.block3_conv4 = CONV2D(
+            self.block3_conv3,
+            [3,3,256,256],
+            name = 'block3_conv4',
+            ini_val = w5[0]
+            )
+        self.block3_conv4 = PLUSB(
+            self.block3_conv4,
+            name = 'block3_conv4',
+            ini_val = w5[1]
+            )
+        self.block3_conv4 = tf.nn.relu(self.block3_conv4)
+
+        self.block3_pool = tf.contrib.layers.max_pool2d(
+            self.block3_conv4,
             kernel_size = (2,2),
             data_format = 'NHWC'
             )
@@ -161,8 +190,37 @@ class V19_CONV(MODEL):
             )
         self.block4_conv2 = tf.nn.relu(self.block4_conv2)
 
-        self.block4_pool = tf.contrib.layers.max_pool2d(
+        w4 = v19.get_layer('block4_conv3').get_weights()
+        self.block4_conv3 = CONV2D(
             self.block4_conv2,
+            [3,3,512,512],
+            name = 'block4_conv3',
+            ini_val = w4[0],
+            padding = 'SAME'
+            )
+        self.block4_conv3 = PLUSB(
+            self.block4_conv3,
+            name = 'block4_conv3',
+            ini_val = w4[1]
+            )
+        self.block4_conv3 = tf.nn.relu(self.block4_conv2)
+
+        w5 = v19.get_layer('block4_conv4').get_weights()
+        self.block4_conv4 = CONV2D(
+            self.block4_conv3,
+            [3,3,512,512],
+            name = 'block4_conv4',
+            ini_val = w5[0]
+            )
+        self.block4_conv4 = PLUSB(
+            self.block4_conv4,
+            name = 'block4_conv4',
+            ini_val = w5[1]
+            )
+        self.block4_conv4 = tf.nn.relu(self.block4_conv4)
+
+        self.block4_pool = tf.contrib.layers.max_pool2d(
+            self.block4_conv4,
             kernel_size = (2,2),
             data_format = 'NHWC'
             )
@@ -201,8 +259,37 @@ class V19_CONV(MODEL):
             )
         self.block5_conv2 = tf.nn.relu(self.block5_conv2)
 
-        self.block5_pool = tf.contrib.layers.max_pool2d(
+        w4 = v19.get_layer('block5_conv3').get_weights()
+        self.block5_conv3 = CONV2D(
             self.block5_conv2,
+            [3,3,512,512],
+            name = 'block5_conv3',
+            ini_val = w4[0],
+            padding = 'SAME'
+            )
+        self.block5_conv3 = PLUSB(
+            self.block5_conv3,
+            name = 'block5_conv3',
+            ini_val = w4[1]
+            )
+        self.block5_conv3 = tf.nn.relu(self.block5_conv2)
+
+        w5 = v19.get_layer('block5_conv4').get_weights()
+        self.block5_conv4 = CONV2D(
+            self.block5_conv3,
+            [3,3,512,512],
+            name = 'block5_conv4',
+            ini_val = w5[0]
+            )
+        self.block5_conv4 = PLUSB(
+            self.block5_conv4,
+            name = 'block5_conv4',
+            ini_val = w5[1]
+            )
+        self.block5_conv4 = tf.nn.relu(self.block5_conv4)
+
+        self.block5_pool = tf.contrib.layers.max_pool2d(
+            self.block5_conv4,
             kernel_size = (2,2),
             data_format = 'NHWC'
             )
