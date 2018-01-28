@@ -141,36 +141,44 @@ def CONV2D(
     name = "defCONV2D",
     padding = "VALID",
     strides = [1,1,1,1],
-    get_trainable = False
+    get_trainable = False,
+    ini_val = None
     ):
-    W = tf.get_variable(name+"W",shape=wshape,initializer=tf.contrib.layers.xavier_initializer_conv2d())
+    if ini_val is not None:
+        W = tf.get_variable(name+"W",initializer=tf.constant(ini_val))
+    else:
+        W = tf.get_variable(name+"W",shape=wshape,initializer=tf.contrib.layers.xavier_initializer_conv2d())
     RES = tf.nn.conv2d(inp,W,strides=strides,padding = padding)
     return RES
 
 def PLUSB(
     inp,
     name = "defPLUSB",
-    get_trainable = False
+    get_trainable = False,
+    ini_val = None
     ):
-    if len(inp.shape) == 4:
+    if ini_val is not None:
+        b = tf.get_variable(name+"b",initializer=tf.constant(ini_val))
+    elif len(inp.shape) == 4:
         _,w,h,c = inp.shape
         b = tf.get_variable(name+"b",shape = [w,h,c],initializer = tf.zeros_initializer())
-        RES = inp+b
-        return RES
     elif len(inp.shape) == 2:
         _,c = inp.shape
         b = tf.get_variable(name+"b",shape = [1,c],initializer = tf.zeros_initializer())
-        RES = inp+b
-        return RES
+    return inp + b
 
 def FC(
     inp,
     outdim,
     name = "defFC",
-    get_variable = False
+    get_variable = False,
+    ini_val = None
     ):
     _,c = inp.shape
-    W = tf.get_variable(name+"W",shape = [c,outdim],initializer = tf.contrib.layers.xavier_initializer())
+    if ini_val is not None:
+        W = tf.get_variable(name + 'W',initializer = tf.constant(ini_val))
+    else:
+        W = tf.get_variable(name+"W",shape = [c,outdim],initializer = tf.contrib.layers.xavier_initializer())
     RES = tf.matmul(inp,W)
     return RES
 
@@ -201,7 +209,7 @@ class MODEL:
     def close(self,reset=True):
         self.sess.close()
         tf.reset_default_graph()
-    def train(self,X,Y,loop=300,mmmode = True):
+    def train(self,X,Y,loop=300,mmmode = False):
         loss = []
         fig = plt.figure()
         ax = fig.add_subplot(111)
@@ -221,7 +229,7 @@ class MODEL:
             ax.plot(loss)
             ax.set_title(str(i)+"/"+str(loop))
             fig.canvas.draw()
-    def train_minib(self,X,Y,dis=False,loop=300,bloop=4,bsize=128,mmmode = True):
+    def train_minib(self,X,Y,dis=False,loop=300,bloop=4,bsize=128,mmmode = False):
         loss = []
         L = len(X)
         fig = plt.figure()
