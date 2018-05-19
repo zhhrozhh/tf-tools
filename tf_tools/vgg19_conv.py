@@ -7,7 +7,7 @@ v19 = VGG19(weights = 'imagenet',include_top = False)
 class V19_CONV(MODEL):
     def __init__(self,name,W,H):
         MODEL.__init__(self,name)
-        self.X = tf.placeholder(shape = [None,W,H,3],dtype = tf.float32)
+        self.X = tf.placeholder(shape = [None,H,W,3],dtype = tf.float32)
 
 
         w0 = v19.get_layer('block1_conv1').get_weights()

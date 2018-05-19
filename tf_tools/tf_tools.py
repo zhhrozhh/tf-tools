@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+
 def ACT(inp,name = "defACT",get_trainable = False):
     bshape = inp.shape[1:]
     R = tf.get_variable(name+"R",shape=bshape,initializer=tf.contrib.layers.xavier_initializer())
@@ -209,13 +210,14 @@ class MODEL:
     def close(self,reset=True):
         self.sess.close()
         tf.reset_default_graph()
-    def train(self,X,Y,loop=300,mmmode = False):
+    def train(self,X,Y,loop=300,mmmode = False,vbs = True):
         loss = []
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        plt.ion()
-        fig.show()
-        fig.canvas.draw()
+        if vbs:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            plt.ion()
+            fig.show()
+            fig.canvas.draw()
 
         if mmmode:
             X,Y = MMlize(X,Y)
@@ -225,22 +227,24 @@ class MODEL:
             loss.append(cost)
             if len(loss)>50:
                 loss = loss[1:]
-            ax.clear()
-            ax.plot(loss)
-            ax.set_title(str(i)+"/"+str(loop))
-            fig.canvas.draw()
-    def train_minib(self,X,Y,dis=False,loop=300,bloop=4,bsize=128,mmmode = False):
+            if vbs:
+                ax.clear()
+                ax.plot(loss)
+                ax.set_title(str(i)+"/"+str(loop))
+                fig.canvas.draw()
+    def train_minib(self,X,Y,dis=False,loop=300,bloop=4,bsize=128,mmmode = False,vbs = True):
         loss = []
         L = len(X)
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        plt.ion()
-        fig.show()
-        fig.canvas.draw()
+        if vbs:
+            fig = plt.figure()
+            ax = fig.add_subplot(111)
+            plt.ion()
+            fig.show()
+            fig.canvas.draw()
         for i in range(loop):
             idx = np.random.choice(range(L),size = bsize)
-            X_ = X[idx,:,:,:]
-            Y_ = Y[idx,:]
+            X_ = X[idx]
+            Y_ = Y[idx]
             if mmmode:
                 X_,Y_ = MMlize(X_,Y_)
             for b in range(bloop):
@@ -248,10 +252,11 @@ class MODEL:
                 loss.append(cost)
                 if len(loss) > 50:
                     loss = loss[1:]
-                ax.clear()
-                ax.plot(loss)
-                ax.set_title(str(i)+"/"+str(loop))
-                fig.canvas.draw()
+                if vbs:
+                    ax.clear()
+                    ax.plot(loss)
+                    ax.set_title(str(i)+"/"+str(loop))
+                    fig.canvas.draw()
     def save(self,name = None):
         if name == None:
             name = self.name
